@@ -179,6 +179,17 @@ def save_data(book, filename="addressbook.pkl"):
         pickle.dump(book, file)
 
 
+def load_data(filename="addressbook.pkl"):
+    """Load the address book from a file."""
+    try:
+        with open(filename, "rb") as file:
+            return pickle.load(file)
+
+    except FileNotFoundError:
+        return AddressBook()
+
+
+
 def input_error(func):
     """Convert input-related exceptions into user messages."""
 
@@ -372,14 +383,13 @@ def main():
 
 
 if __name__ == "__main__":
-    book = AddressBook()
+    book = load_data()
 
-    john = Record("John")
-    john.add_phone("1234567890")
-    john.add_birthday("15.05.1990")
+    for record in book.data.values():
+        print(record)
 
-    book.add_record(john)
-    save_data(book)
+    john = book.find("John")
 
-    print("Address book saved successfully!")
+    if john is not None:
+        print(f"Birthday: {john.birthday}")
 
